@@ -26,7 +26,19 @@ jobs:
       run: yarn
     - name: Unit tests
       run: yarn test
+    - name: Publish unit test results
+      if: ${{ always() }}
+      uses: mikepenz/action-junit-report@v4
+      with:
+        check_name: Unit tests
+        report_paths: reports/jest-junit.xml
     - name: Build
       run: yarn build
     - name: Integration tests
       run: yarn test:e2e
+    - name: Publish e2e test results
+      if: ${{ always() }}
+      uses: mikepenz/action-junit-report@v4
+      with:
+        check_name: E2E tests
+        report_paths: reports/cypress-junit.xml
