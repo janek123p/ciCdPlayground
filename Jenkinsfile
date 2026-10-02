@@ -5,6 +5,15 @@ pipeline {
     }
 
     stages {
+        stage('init') {
+            steps {
+                script {
+                    currentBuild.displayName = "Deploy ${env.GIT_URL.split('/')[3]} (#${BUILD_NUMBER})"
+                    currentBuild.description = "CI/CD workshop pipeline: builds, tests and deploys the app to the S3 playground."
+                }
+            }
+        }
+
         stage('install') {
             steps {
                 sh 'yarn'
@@ -53,6 +62,12 @@ pipeline {
                     profileName: 'role-based-access', 
                     userMetadata: []
             }
+        }
+    }
+
+    post {
+        always {
+            junit allowEmptyResults: true, testResults: 'reports/*.xml'
         }
     }
 }
